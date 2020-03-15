@@ -12,7 +12,7 @@
 
 #include <vm.h>
 #include <fcntl.h>
-#include <stdio.h>
+#include <stdlib.h>
 
 int	handle_op_append(
 		t_instruction *instruction,

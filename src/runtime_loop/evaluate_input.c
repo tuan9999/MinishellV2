@@ -16,47 +16,82 @@
 #include <stdlib.h>
 
 /*
-** Three step parser:
-** seperate (seperate commands with ;)
-** foreach:
-**  expand (expand variables within a single command)
-**  evaluate (evaluate the comamnd
+** literally a dtor wrapper
 */
 
-int		expand_evaluate(
-		t_string_slice *command,
+static void	cleanup_instructions(t_vector *self)
+{
+	clean_instructions(self);
+}
+
+/*
+** evaluate_unit: parse and execute a command
+**  compiles a command without expanding variables
+**  and executes it within the "vm"
+*/
+
+static int	evaluate_unit(
+		char *line,
 		t_table *env)
 {
+	char		*pline_cpy;
 	t_vector	instructions;
-	char		*line;
-	char		*orgline;
 
-	if (!vector_new(&instructions, sizeof(t_instruction)))
+	if (!vector_new_dtor(&instructions, sizeof(t_instruction),
+			cleanup_instructions))
 		return (0);
-	command->str[command->len] = '\0';
-	if (!expand_line(command->str, env, &orgline))
+	pline_cpy = line;
+	if (!parse_line(&pline_cpy, &instructions))
 	{
-		ft_printf("eval error: failed to expand line\n");
+		ft_printf("eval error: failed to parse command\n");
+		vector_destroy(&instructions);
 		return (0);
 	}
-	line = orgline;
-	if (!parse_line(&line, &instructions))
-	{
-		ft_printf("eval error: failed to parse line\n");
-		free(orgline);
-		return (0);
-	}
-	free(orgline);
 	if (!vm_execute(&instructions, env))
 	{
-		ft_printf("eval error: virtual machine crashed\n");
+		ft_printf(("eval error: virtual machine crashed\n"));
+		vector_destroy(&instructions);
 		return (0);
 	}
 	vector_destroy(&instructions);
 	return (1);
 }
 
-int		evaluate_input(
+/*
+** expand_evaluate: expand the variables and evaluate (within) a command.
+**  variables are expanded through expand_line,
+**  code is evaluated through evaluate_unit.
+*/
+
+static int	expand_evaluate(
+		t_string_slice *command,
+		t_table *env)
+{
+	char		*line;
+
+	command->str[command->len] = '\0';
+	if (!expand_line(command->str, env, &line))
+	{
+		ft_printf("eval error: failed to expand line\n");
+		return (0);
+	}
+	if (!evaluate_unit(line, env))
+	{
+		free(line);
+		return (0);
+	}
+	free(line);
+	return (1);
+}
+
+/*
+** evaluate_input: evaluates a line of 'shell'
+**  it removes escape sequences using sanitize_line,
+**  then it separates all the commands with ';'
+**  and then it calls expand_evaluate on each separated command.
+*/
+
+int			evaluate_input(
 		char *input,
 		t_table *env)
 {
@@ -71,9 +106,10 @@ int		evaluate_input(
 		vector_destroy(&commands);
 		return (1);
 	}
-	if (!seperate_commands(sanitized, &commands))
+	if (!separate_commands(sanitized, &commands))
 	{
-		ft_printf("preprocessor error: failed to seperate commands\n");
+		ft_printf("preprocessor error: failed to separate commands\n");
+		free(sanitized);
 		vector_destroy(&commands);
 		return (1);
 	}

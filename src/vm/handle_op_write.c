@@ -12,6 +12,7 @@
 
 #include <vm.h>
 #include <fcntl.h>
+#include <stdlib.h>
 
 int	handle_op_write(
 		t_instruction *instruction,

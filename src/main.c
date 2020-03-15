@@ -12,7 +12,6 @@
 
 #include <runtime_loop.h>
 #include <signal.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <libft.h>
 
@@ -45,20 +44,20 @@ void	global_ctor(void)
 
 int		load_env(t_table *env)
 {
-	size_t	idx;
-	size_t	location;
-	size_t	length;
-	char	*var[2];
+	size_t			idx[2];
+	size_t			length;
+	char			*var[2];
+	extern char		**environ;
 
-	idx = 0;
-	while (environ[idx] != NULL)
+	idx[0] = 0;
+	while (environ[idx[0]] != NULL)
 	{
-		location = 0;
-		while (environ[idx][location] != '=')
-			location += 1;
-		length = ft_strlen(environ[idx]);
-		var[0] = ft_substr(environ[idx], 0, location);
-		var[1] = ft_substr(environ[idx], location + 1, location - length);
+		idx[1] = 0;
+		while (environ[idx[0]][idx[1]] != '=')
+			idx[1] += 1;
+		length = ft_strlen(environ[idx[0]]);
+		var[0] = ft_substr(environ[idx[0]], 0, idx[1]);
+		var[1] = ft_substr(environ[idx[0]], idx[1] + 1, idx[1] - length);
 		if (var[0] == NULL || var[1] == NULL)
 		{
 			free(var[0]);
@@ -67,7 +66,7 @@ int		load_env(t_table *env)
 		}
 		if (!table_insert(env, var[0], var[1]))
 			return (0);
-		idx += 1;
+		idx[0] += 1;
 	}
 	return (1);
 }

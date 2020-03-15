@@ -27,5 +27,6 @@ t_bool	vector_with_capacity(
 	self->capacity = capacity;
 	self->size = 0;
 	self->type_size = type_size;
+	self->dtor = NULL;
 	return (true);
 }

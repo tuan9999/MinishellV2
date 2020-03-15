@@ -12,7 +12,6 @@
 
 #include <runtime_loop.h>
 #include <ft_printf.h>
-#include <stdio.h>
 #include <stdlib.h>
 
 int	take_input(char **input)
@@ -25,13 +24,13 @@ int	take_input(char **input)
 	{
 		free(line_buffer);
 		ft_printf("exit\n");
-		return (2);
+		return (TAKE_INPUT_EXIT_CALLED);
 	}
 	else if (readline_result == -1)
 	{
 		ft_perror("failed to read line");
-		return (1);
+		return (TAKE_INPUT_READLINE_FAILED);
 	}
 	*input = line_buffer;
-	return (0);
+	return (TAKE_INPUT_SUCCESS);
 }

@@ -22,6 +22,7 @@ typedef struct	s_vector
 	size_t		capacity;
 	size_t		type_size;
 	char		*raw;
+	void		(*dtor)(struct s_vector *item);
 }				t_vector;
 
 t_bool			vector_with_capacity(
@@ -56,5 +57,14 @@ int				vector_foreachc(
 				t_vector *self,
 				int (*f)(void *, void *),
 				void *capture);
+t_bool			vector_with_capacity_dtor(
+				t_vector *self,
+				size_t type_size,
+				size_t capacity,
+				void (*dtor)(struct s_vector *self));
+t_bool			vector_new_dtor(
+				t_vector *self,
+				size_t type_size,
+				void (*dtor)(struct s_vector *self));
 
 #endif

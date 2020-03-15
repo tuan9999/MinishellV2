@@ -39,6 +39,43 @@ int		destroy_state(t_vm_state *state)
 	return (0);
 }
 
+/*
+** vm_execute:
+**  take a list of instructions and execute them
+**
+** this setup uses a pipe and call stack:
+**
+** the command 'echo hello'
+** would be compiled into
+**
+** OP_COMMAND { PAIR: { NAME: "echo", ARGS: { "echo", "hello" } } }
+** OP_CALL
+**
+** the pipe stack is initialized with just the value -1.
+** (i.e.: pipe stack { -1 })
+**
+** OP_COMMAND will place the command pair onto the call stack.
+** (i.e.: call stack { PAIR { "echo", {"echo", "hello"} } }
+** OP_CALL will go through the command stack from first-to-last,
+** and execute every command on the stack.
+**
+** each command is given a set of pipes, given through a sliding window,
+**  shifting by one.
+** (i.e.:
+**   command 1 gets pipes 1, 2
+**   command 2 gets pipes 2, 3
+**   command 3 gets pipes 3, 4
+**   command n gets pipes n, n + 1)
+**
+** OP_PIPE will place a new set of pipes on the pipe stack.
+** OP_APPEND will open a file in append mode, and place it on an 'even' pipe.
+** OP_READ will open a file in read mode, and place it on an 'uneven' pipe.
+** OP_WRITE will open a file in truncate mode, and place it on an 'even' pipe.
+**
+** There is an unused debug instruction called OP_NOP (No Operation),
+**  which does nothing.
+*/
+
 int		vm_execute(
 		t_vector *instructions,
 		t_table *env)

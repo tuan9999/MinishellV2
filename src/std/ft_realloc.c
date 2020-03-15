@@ -23,10 +23,7 @@ char	*ft_realloc(
 
 	new = malloc(capacity * sizeof(char));
 	if (new == NULL)
-	{
-		free(ptr);
 		return (NULL);
-	}
 	idx = 0;
 	while (idx < ocapacity)
 	{

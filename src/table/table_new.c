@@ -11,8 +11,20 @@
 /* ************************************************************************** */
 
 #include <table.h>
+#include <stdlib.h>
 
-t_bool	table_new(t_table *self)
+static void	cleanup_table(t_table *self)
 {
-	return (vector_new(self, sizeof(t_table_entry)));
+	t_table_entry	entry;
+
+	while (vector_pop(self, &entry))
+	{
+		free(entry.key);
+		free(entry.value);
+	}
+}
+
+t_bool		table_new(t_table *self)
+{
+	return (vector_new_dtor(self, sizeof(t_table_entry), cleanup_table));
 }

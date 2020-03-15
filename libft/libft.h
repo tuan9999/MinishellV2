@@ -6,7 +6,7 @@
 /*   By: dpattij <dpattij@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/29 17:51:38 by dpattij        #+#    #+#                */
-/*   Updated: 2019/11/05 21:20:28 by dpattij       ########   odam.nl         */
+/*   Updated: 2020/03/13 12:15:50 by tuperera      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ char				*ft_strrchr(const char *str, int chr);
 int					ft_strncmp(
 	const char *str1, const char *str2, t_size length);
 char				*ft_strdup(const char *str);
+char				**ft_split(char const *s, char c);
 void				ft_bzero(void *string, t_size length);
 void				ft_putchar_fd(char c, int fd);
 void				ft_putstr_fd(char *s, int fd);

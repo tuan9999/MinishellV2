@@ -38,6 +38,13 @@ static t_bool	filter_escape(
 	return (true);
 }
 
+/*
+** sanitize_line:
+** takes in a string,
+** removes all ANSI escape sequences (sanitize)
+** returns a new string w/o all the escape sequences
+*/
+
 t_bool			sanitize_line(
 		char **input,
 		char **out)

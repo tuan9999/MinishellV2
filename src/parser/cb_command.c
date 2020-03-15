@@ -1,17 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   cb_command.c                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: dpattij <dpattij@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/01/21 07:13:19 by dpattij           #+#    #+#             */
-/*   Updated: 2020/01/21 08:22:45 by dpattij          ###   ########.fr       */
+/*   Project: memeshell420                                ::::::::            */
+/*   Members: dpattij, tuperera                         :+:    :+:            */
+/*   Copyright: 2020                                   +:+                    */
+/*                                                    +#+                     */
+/*                                                   +#+                      */
+/*                                                  #+#    #+#                */
+/*   while (!(succeed = try()));                   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <parser.h>
 #include <stdlib.h>
+
+static void		cleanup_args(t_vector *self)
+{
+	char	*item;
+
+	while (vector_pop(self, &item))
+		free(item);
+}
 
 static t_bool	cb_command_core(
 		char **input,
@@ -21,7 +29,6 @@ static t_bool	cb_command_core(
 {
 	if (!vector_push(args, &tmp))
 	{
-		vector_destroy(args);
 		free(out->command);
 		free(tmp);
 		return (false);
@@ -31,6 +38,14 @@ static t_bool	cb_command_core(
 	return (true);
 }
 
+/*
+** cb_command: parse a command and its arguments
+**  essentially "expect a list of units/strings"
+**  it does not place it directly on the instruction stack
+**  instead it returns a t_command_pair used as operand to OP_COMMAND...
+**  ... (i think)
+*/
+
 t_bool			cb_command(
 		char **input,
 		t_command_pair *output)
@@ -39,14 +54,13 @@ t_bool			cb_command(
 	t_command_pair	out;
 	char			*tmp;
 
-	if (!vector_new(&args, sizeof(char *)))
+	if (!vector_new_dtor(&args, sizeof(char *), cleanup_args))
 		return (false);
 	take_while(input, NULL, is_literal_space);
 	if (!cb_item(input, &out.command))
 		return (false);
 	if (!vector_push(&args, &out.command))
 	{
-		vector_destroy(&args);
 		free(out.command);
 		return (false);
 	}

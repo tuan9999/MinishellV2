@@ -29,7 +29,7 @@ typedef struct	s_string_slice
 	size_t		len;
 }				t_string_slice;
 
-t_bool			seperate_commands(
+t_bool			separate_commands(
 				char *input,
 				t_vector *commands);
 int				evaluate_input(
@@ -72,5 +72,12 @@ t_bool			sanitize_line(
 t_bool			parse_line(
 				char **input,
 				t_vector *instructions);
+t_bool			expand_line(
+				char *input,
+				t_table *env,
+				char **output);
+t_bool			is_escapable(char c);
+t_bool			is_string_quote(char c);
+t_bool			clean_instructions(t_vector *instructions);
 
 #endif

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*   File: vm.h                                           ::::::::            */
-/*   Created on 2020/03/04 01:32:22                     :+:    :+:            */
-/*   Created by dpattij <dpattij@student.codam.nl>     +:+                    */
-/*                                                    +#+                     */
-/*   void *data = NULL;                              +#+                      */
-/*   while (data == NULL)                           #+#    #+#                */
-/*       data = malloc(1337 * 42 * 21);            ########   odam.nl         */
+/*                                                        ::::::::            */
+/*   vm.h                                               :+:    :+:            */
+/*                                                     +:+                    */
+/*   By:                                              +#+                     */
+/*                                                   +#+                      */
+/*   Created: Invalid date        by                #+#    #+#                */
+/*   Updated: 2020/03/13 12:37:01 by tuperera      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,5 +87,7 @@ int				handle_op_read(
 int				handle_op_write(
 				t_instruction *instruction,
 				t_vm_state *state);
+char			*check_dir(char **args, char *path);
+void			switch_to_process(char *const *args, t_table *env);
 
 #endif

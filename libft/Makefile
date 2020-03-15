@@ -6,7 +6,7 @@
 #    By: dpattij <dpattij@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/11/03 20:06:23 by dpattij        #+#    #+#                 #
-#    Updated: 2020/02/20 19:16:09 by dpattij          ###   ########.fr        #
+#    Updated: 2020/03/13 12:28:20 by tuperera      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -53,7 +53,8 @@ FT_FILES =	bzero \
 			putchar_fd \
 			putstr_fd \
 			putendl_fd \
-			putnbr_fd
+			putnbr_fd \
+			split
 FT_FILES := $(FT_FILES:%=ft_%.o)
 
 BONUS_FILES =	lstnew \

@@ -39,15 +39,17 @@ static t_bool	is_valid_identifier(char *str)
 	return (true);
 }
 
-int	unset_main(
+int				unset_main(
 		int argc,
 		char **argv,
 		t_table *env)
 {
 	int	idx;
+	int	errored;
 
 	idx = 0;
 	argc -= 1;
+	errored = 0;
 	while (idx < argc)
 	{
 		idx += 1;
@@ -55,11 +57,12 @@ int	unset_main(
 			table_remove(env, ft_strdup(argv[idx]));
 		else
 		{
+			errored = 1;
 			ft_putstr_fd("unset: ", 2);
 			ft_putstr_fd("'", 2);
 			ft_putstr_fd(argv[idx], 2);
 			ft_putendl_fd("': not a valid identifier", 2);
 		}
 	}
-	return (0);
+	return (errored);
 }

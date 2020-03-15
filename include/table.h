@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   table.h                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: dpattij <dpattij@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/01/23 04:26:13 by dpattij           #+#    #+#             */
-/*   Updated: 2020/01/23 05:37:21 by dpattij          ###   ########.fr       */
+/*   Project: memeshell420                                ::::::::            */
+/*   Members: dpattij, tuperera                         :+:    :+:            */
+/*   Copyright: 2020                                   +:+                    */
+/*                                                    +#+                     */
+/*                                                   +#+                      */
+/*                                                  #+#    #+#                */
+/*   while (!(succeed = try()));                   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,5 +30,6 @@ char			*table_get(t_table *self, char *key);
 t_table_entry	*table_get_entry(t_table *self, char *key);
 t_bool			table_insert(t_table *self, char *key, char *value);
 void			table_destroy(t_table *self);
+t_bool			table_remove(t_table *self, char *key);
 
 #endif

@@ -1,12 +1,12 @@
 # **************************************************************************** #
 #                                                                              #
-#    Project: memeshell420                                ::::::::             #
-#    Members: dpattij, tuperera                         :+:    :+:             #
-#    Copyright: 2020                                   +:+                     #
-#                                                     +#+                      #
+#                                                         ::::::::             #
+#    Makefile                                           :+:    :+:             #
+#                                                      +:+                     #
+#    By:                                              +#+                      #
 #                                                    +#+                       #
-#                                                   #+#    #+#                 #
-#    while (!(succeed = try()));                   ########   odam.nl          #
+#    Created: Invalid date        by                #+#    #+#                 #
+#    Updated: 2020/03/13 12:37:44 by tuperera      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,16 +33,21 @@ SRC_FILES		=	main \
 					builtins/builtin_echo \
 					builtins/builtin_env \
 					builtins/builtin_exit \
+					builtins/builtin_export \
 					builtins/builtin_manage \
 					builtins/builtin_pwd \
+					builtins/builtin_unset \
 					parser/cb_command \
 					parser/cb_item \
 					parser/cb_line \
 					parser/cb_operation \
+					parser/expand_line \
 					parser/is_control \
+					parser/is_escapable \
 					parser/is_literal_space \
+					parser/is_string_quote \
 					parser/preprocess_line \
-					parser/seperate_commands \
+					parser/separate_commands \
 					parser/skip_atleast \
 					parser/take_char \
 					parser/take_number \
@@ -54,19 +59,23 @@ SRC_FILES		=	main \
 					runtime_loop/runtime_loop \
 					runtime_loop/evaluate_input \
 					std/ft_realloc \
+					std/ft_perror \
 					table/table_destroy \
 					table/table_get \
 					table/table_insert \
 					table/table_new \
+					table/table_remove \
 					vector/vector_destroy \
 					vector/vector_get \
 					vector/vector_getr \
 					vector/vector_new \
+					vector/vector_new_dtor \
 					vector/vector_push \
 					vector/vector_pop \
 					vector/vector_foreach \
 					vector/vector_resize \
 					vector/vector_with_capacity \
+					vector/vector_with_capacity_dtor \
 					vm/handle_op_append \
 					vm/handle_op_call \
 					vm/handle_op_command \
@@ -74,7 +83,8 @@ SRC_FILES		=	main \
 					vm/handle_op_read \
 					vm/handle_op_write \
 					vm/run_process \
-					vm/vm_execute
+					vm/vm_execute  \
+					vm/switch_to_process
 
 ###########################
 
@@ -132,6 +142,9 @@ srdb: FLAGS = $(FLAGS_RDBG)
 srdb: all
 rdb: fclean
 	@$(MAKE) srdb
+
+rafl: export CC = ~/afl/afl-clang
+rafl: rasan
 
 rasan: fclean
 	@$(MAKE) asan

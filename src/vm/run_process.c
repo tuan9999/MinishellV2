@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*   Project: memeshell420                                ::::::::            */
-/*   Members: dpattij, tuperera                         :+:    :+:            */
-/*   Copyright: 2020                                   +:+                    */
-/*                                                    +#+                     */
+/*                                                        ::::::::            */
+/*   run_process.c                                      :+:    :+:            */
+/*                                                     +:+                    */
+/*   By:                                              +#+                     */
 /*                                                   +#+                      */
-/*                                                  #+#    #+#                */
-/*   while (!(succeed = try()));                   ########   odam.nl         */
+/*   Created: Invalid date        by                #+#    #+#                */
+/*   Updated: 2020/03/13 12:38:07 by tuperera      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <runtime_loop.h>
+#include <vm.h>
 
 static int	null_term_args(t_vector *args)
 {
@@ -59,15 +60,6 @@ static void	close_pipes(const int pipes[2])
 		close(pipes[1]);
 }
 
-static void	switch_to_process(
-		const char *filename,
-		char *const *args,
-		t_table *env)
-{
-	(void)env;
-	execvp(filename, args);
-}
-
 int			run_process(
 		t_vector *args,
 		t_vector *pipe_stack,
@@ -84,13 +76,13 @@ int			run_process(
 	if (pid == 0)
 	{
 		build_pipes(pipe_stack, pipes);
-		switch_to_process(cmd, (char *const *)args->raw, env);
+		switch_to_process((char *const *)args->raw, env);
 		ft_putstr_fd("minishell: ", STDERR_FILENO);
 		ft_putstr_fd(cmd, STDERR_FILENO);
 		ft_putstr_fd(": ", STDERR_FILENO);
 		ft_putendl_fd(strerror(errno), STDERR_FILENO);
 		close_pipes(pipes);
-		exit(0);
+		exit(127);
 	}
 	else if (pid > 0)
 		vector_push(&g_running_processes, &pid);

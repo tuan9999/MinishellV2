@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   builtin_manage.c                                   :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: dpattij <dpattij@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/01/16 04:03:44 by dpattij           #+#    #+#             */
-/*   Updated: 2020/01/23 14:29:32 by dpattij          ###   ########.fr       */
+/*   Project: memeshell420                                ::::::::            */
+/*   Members: dpattij, tuperera                         :+:    :+:            */
+/*   Copyright: 2020                                   +:+                    */
+/*                                                    +#+                     */
+/*                                                   +#+                      */
+/*                                                  #+#    #+#                */
+/*   while (!(succeed = try()));                   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,9 @@
 #include <builtin.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include <stdio.h>
 #include <runtime_loop.h>
 
-int			is_builtin(const char *name)
+int				is_builtin(const char *name)
 {
 	return (ft_strncmp(name, "echo", 5) == 0
 	|| ft_strncmp(name, "exit", 5) == 0
@@ -29,7 +28,7 @@ int			is_builtin(const char *name)
 	|| ft_strncmp(name, "unset", 6) == 0);
 }
 
-static void	build_pipes(
+static void		build_pipes(
 		t_vector *pipe_stack,
 		const int pipes[2])
 {
@@ -50,7 +49,7 @@ static void	build_pipes(
 	}
 }
 
-static void	close_pipes(const int pipes[2])
+static void		close_pipes(const int pipes[2])
 {
 	if (pipes[0] != -1)
 		close(pipes[0]);
@@ -58,7 +57,26 @@ static void	close_pipes(const int pipes[2])
 		close(pipes[1]);
 }
 
-int			run_builtin(
+static t_bool	run_pipeless(
+		char *name,
+		t_vector *args,
+		t_table *env,
+		int *ret)
+{
+	if (ft_strncmp(name, "exit", 5) == 0)
+		*ret = (exit_main(args->size, (char **)args->raw));
+	else if (ft_strncmp(name, "cd", 3) == 0)
+		*ret = (cd_main(args->size, (char **)args->raw, env));
+	else if (ft_strncmp(name, "unset", 6) == 0)
+		*ret = (unset_main(args->size, (char **)args->raw, env));
+	else if (ft_strncmp(name, "export", 7) == 0)
+		*ret = (export_main(args->size, (char **)args->raw, env));
+	else
+		return (false);
+	return (true);
+}
+
+int				run_builtin(
 		t_vector *args,
 		t_vector *pipe_stack,
 		const int pipes[2],
@@ -68,14 +86,8 @@ int			run_builtin(
 	char	*name;
 
 	(void)vector_get(args, 0, &name);
-	if (ft_strncmp(name, "exit", 5) == 0 && pipe_stack->size == 1)
-		return (exit_main(0, 0));
-	else if (ft_strncmp(name, "cd", 3) == 0 && pipe_stack->size == 1)
-		return (cd_main(args->size, (char **)args->raw));
-	else if (ft_strncmp(name, "unset", 6) == 0 && pipe_stack->size == 1)
-		return (unset_main(args->size, (char **)args->raw, env));
-	else if (ft_strncmp(name, "export", 7) == 0 && pipe_stack->size == 1)
-		return (export_main(args->size, (char **)args->raw, env));
+	if (pipe_stack->size == 1 && run_pipeless(name, args, env, &pid))
+		return (pid);
 	pid = fork();
 	if (pid == 0)
 	{
